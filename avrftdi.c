@@ -756,6 +756,8 @@ static int avrftdi_open(PROGRAMMER * pgm, char *port)
 			pdata->rx_buffer_size = 1024;
 			pdata->tx_buffer_size = 1024;
 			break;
+#elif defined(_MSC_VER)
+#pragma message("No support for 232H, use a newer libftdi, version >= 0.20")
 #else
 #warning No support for 232H, use a newer libftdi, version >= 0.20
 #endif

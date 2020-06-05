@@ -32,7 +32,6 @@
 #  include <winsock2.h>
 #endif
 
-#include <windows.h>
 #include <stdio.h>
 #include <ctype.h>   /* for isprint */
 #include <errno.h>   /* ENOTTY */

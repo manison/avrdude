@@ -51,6 +51,11 @@
 #include "term.h"
 
 
+#ifdef _MSC_VER
+#   define setvbuf  __noop
+#endif
+
+
 /* Get VERSION from ac_cfg.h */
 char * version      = VERSION;
 

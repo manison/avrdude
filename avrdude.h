@@ -39,6 +39,10 @@ int avrdude_message(const int msglvl, const char *format, ...);
 
 #if defined(WIN32NATIVE)
 
+#ifdef _MSC_VER
+#   include <unistd.h>
+#endif
+
 #include "ac_cfg.h"
 #include <windows.h>
 
@@ -59,5 +63,10 @@ int gettimeofday(struct timeval *tv, struct timezone *tz);
 }
 #endif
 #endif /* defined(WIN32NATIVE) */
+
+#ifdef _MSC_VER
+#   include <unistd.h>
+#   define STDERR_FILENO	(_fileno(stderr))
+#endif
 
 #endif

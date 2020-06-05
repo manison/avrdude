@@ -316,11 +316,13 @@ static unsigned char reg2offset(int reg)
 /* Read in value from port. */
 static unsigned char inb(unsigned short port)
 {
-    unsigned char t;
+    unsigned char t = 0;
     
+#ifndef _MSC_VER
 	asm volatile ("in %1, %0"
         : "=a" (t)
         : "d" (port));
+#endif
     
 	return t;
 }
@@ -329,11 +331,13 @@ static unsigned char inb(unsigned short port)
 /* Write value to port. */
 static void outb(unsigned char value, unsigned short port)
 {
+#ifndef _MSC_VER
     asm volatile ("out %1, %0"
         :
         : "d" (port), "a" (value) );
 
     return;
+#endif
 }
 
 #if !defined(HAVE_GETTIMEOFDAY)

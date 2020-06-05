@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="arduino.c" />
+    <ClCompile Include="avr.c" />
+    <ClCompile Include="avr910.c" />
+    <ClCompile Include="avrftdi.c" />
+    <ClCompile Include="avrftdi_tpi.c" />
+    <ClCompile Include="avrpart.c" />
+    <ClCompile Include="bitbang.c" />
+    <ClCompile Include="buspirate.c" />
+    <ClCompile Include="butterfly.c" />
+    <ClCompile Include="config.c" />
+    <ClCompile Include="config_gram.c" />
+    <ClCompile Include="confwin.c" />
+    <ClCompile Include="crc16.c" />
+    <ClCompile Include="dfu.c" />
+    <ClCompile Include="fileio.c" />
+    <ClCompile Include="flip1.c" />
+    <ClCompile Include="flip2.c" />
+    <ClCompile Include="ft245r.c" />
+    <ClCompile Include="jtag3.c" />
+    <ClCompile Include="jtagmkI.c" />
+    <ClCompile Include="jtagmkII.c" />
+    <ClCompile Include="lexer.c" />
+    <ClCompile Include="linuxgpio.c" />
+    <ClCompile Include="lists.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="par.c" />
+    <ClCompile Include="pgm.c" />
+    <ClCompile Include="pgm_type.c" />
+    <ClCompile Include="pickit2.c" />
+    <ClCompile Include="pindefs.c" />
+    <ClCompile Include="ppi.c" />
+    <ClCompile Include="ppiwin.c" />
+    <ClCompile Include="safemode.c" />
+    <ClCompile Include="serbb_posix.c" />
+    <ClCompile Include="serbb_win32.c" />
+    <ClCompile Include="ser_avrdoper.c" />
+    <ClCompile Include="ser_posix.c" />
+    <ClCompile Include="ser_win32.c" />
+    <ClCompile Include="stk500.c" />
+    <ClCompile Include="stk500generic.c" />
+    <ClCompile Include="stk500v2.c" />
+    <ClCompile Include="term.c" />
+    <ClCompile Include="update.c" />
+    <ClCompile Include="usbasp.c" />
+    <ClCompile Include="usbtiny.c" />
+    <ClCompile Include="usb_hidapi.c" />
+    <ClCompile Include="usb_libusb.c" />
+    <ClCompile Include="wiring.c" />
+    <ClCompile Include="getopt\getopt.c">
+      <Filter>unistd</Filter>
+    </ClCompile>
+    <ClCompile Include="libunistd\unistd\gettimeofday.c">
+      <Filter>unistd</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ac_cfg.h" />
+    <ClInclude Include="arduino.h" />
+    <ClInclude Include="avr910.h" />
+    <ClInclude Include="avrdude.h" />
+    <ClInclude Include="avrftdi.h" />
+    <ClInclude Include="avrftdi_private.h" />
+    <ClInclude Include="avrftdi_tpi.h" />
+    <ClInclude Include="bitbang.h" />
+    <ClInclude Include="buspirate.h" />
+    <ClInclude Include="butterfly.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="config_gram.h" />
+    <ClInclude Include="crc16.h" />
+    <ClInclude Include="dfu.h" />
+    <ClInclude Include="flip1.h" />
+    <ClInclude Include="flip2.h" />
+    <ClInclude Include="freebsd_ppi.h" />
+    <ClInclude Include="ft245r.h" />
+    <ClInclude Include="jtag3.h" />
+    <ClInclude Include="jtag3_private.h" />
+    <ClInclude Include="jtagmkI.h" />
+    <ClInclude Include="jtagmkII.h" />
+    <ClInclude Include="jtagmkII_private.h" />
+    <ClInclude Include="jtagmkI_private.h" />
+    <ClInclude Include="libavrdude.h" />
+    <ClInclude Include="linuxgpio.h" />
+    <ClInclude Include="linux_ppdev.h" />
+    <ClInclude Include="my_ddk_hidsdi.h" />
+    <ClInclude Include="par.h" />
+    <ClInclude Include="pickit2.h" />
+    <ClInclude Include="ppi.h" />
+    <ClInclude Include="serbb.h" />
+    <ClInclude Include="solaris_ecpp.h" />
+    <ClInclude Include="stk500.h" />
+    <ClInclude Include="stk500generic.h" />
+    <ClInclude Include="stk500v2.h" />
+    <ClInclude Include="stk500v2_private.h" />
+    <ClInclude Include="stk500_private.h" />
+    <ClInclude Include="term.h" />
+    <ClInclude Include="tpi.h" />
+    <ClInclude Include="usbasp.h" />
+    <ClInclude Include="usbdevs.h" />
+    <ClInclude Include="usbtiny.h" />
+    <ClInclude Include="wiring.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="unistd">
+      <UniqueIdentifier>{96a4e45f-af80-45e3-bb19-b112158e7a36}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

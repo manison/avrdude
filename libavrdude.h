@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /* lets try to select at least 32 bits */
 #ifdef HAVE_STDINT_H

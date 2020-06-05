@@ -62,6 +62,9 @@ struct dfu_dev
 
 struct dfu_dev {
   // empty
+#ifdef _MSC_VER
+  int _dummy;
+#endif
 };
 
 #endif

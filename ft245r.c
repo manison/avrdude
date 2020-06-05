@@ -81,7 +81,10 @@
 #elif defined(HAVE_LIBFTDI) && defined(HAVE_USB_H)
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
-#else 
+#elif defined(_MSC_VER)
+#pragma message("No libftdi or libusb support.Install libftdi1 / libusb - 1.0 or libftdi / libusb and run configure / make again.")
+#define DO_NOT_BUILD_FT245R
+#else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_FT245R
 #endif
