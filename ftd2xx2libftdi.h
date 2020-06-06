@@ -97,6 +97,9 @@ struct ftdi_context
 	unsigned int max_packet_size;
 
 	void *usb_dev;
+
+
+	const char *last_error;
 };
 
 struct ftdi_context *ftdi_new(void);
