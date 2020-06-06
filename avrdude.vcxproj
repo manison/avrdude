@@ -37,6 +37,7 @@
     <ClCompile Include="flip1.c" />
     <ClCompile Include="flip2.c" />
     <ClCompile Include="ft245r.c" />
+    <ClCompile Include="ftd2xx2libftdi.c" />
     <ClCompile Include="getopt\getopt.c" />
     <ClCompile Include="jtag3.c" />
     <ClCompile Include="jtagmkI.c" />
@@ -89,6 +90,8 @@
     <ClInclude Include="flip2.h" />
     <ClInclude Include="freebsd_ppi.h" />
     <ClInclude Include="ft245r.h" />
+    <ClInclude Include="ftd2xx2libftdi.h" />
+    <ClInclude Include="ftdi\ftd2xx.h" />
     <ClInclude Include="jtag3.h" />
     <ClInclude Include="jtag3_private.h" />
     <ClInclude Include="jtagmkI.h" />
