@@ -56,6 +56,12 @@
       <Filter>unistd</Filter>
     </ClCompile>
     <ClCompile Include="ftd2xx2libftdi.c" />
+    <ClCompile Include="libunistd\unistd\semaphore.cpp">
+      <Filter>unistd</Filter>
+    </ClCompile>
+    <ClCompile Include="libunistd\unistd\pthread.c">
+      <Filter>unistd</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ac_cfg.h" />
@@ -106,6 +112,12 @@
       <Filter>ftdi</Filter>
     </ClInclude>
     <ClInclude Include="ftd2xx2libftdi.h" />
+    <ClInclude Include="libunistd\unistd\semaphore.h">
+      <Filter>unistd</Filter>
+    </ClInclude>
+    <ClInclude Include="libunistd\unistd\pthread.h">
+      <Filter>unistd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="unistd">

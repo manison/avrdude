@@ -56,7 +56,6 @@
 // Use: cmake -A x64 ..
 
 #ifdef __cplusplus
-#include "chrono.h"
 #ifdef _M_X64
 #include "int128/Int128.h"
 #endif
@@ -203,7 +202,7 @@ int uni_sscanf(char* input,const char* format,...)
 	return retval;
 }
 
-#define sscanf uni_sscanf
+////#define sscanf uni_sscanf
 
 #undef MAX_PRIORITY /* remove winspool.h warning */
 
@@ -691,13 +690,6 @@ int ttyname_r(int fd, char *buf, size_t buflen)
 	(void)buf;
 	(void)buflen;
 	STUB_NEG(ttyname_r);
-}
-
-inline
-useconds_t ualarm(useconds_t usecs, useconds_t interval)
-{	(void)usecs;
-	(void)interval;
-	STUB_0(ualarm);
 }
 
 inline

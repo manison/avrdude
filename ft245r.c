@@ -82,8 +82,7 @@
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
 #elif defined(_MSC_VER)
-#pragma message("No libftdi or libusb support.Install libftdi1 / libusb - 1.0 or libftdi / libusb and run configure / make again.")
-#define DO_NOT_BUILD_FT245R
+# include "ftd2xx2libftdi.h"
 #else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_FT245R
@@ -175,7 +174,11 @@ static void add_to_buf (unsigned char c) {
     sem_post (&buf_data);
 }
 
+#ifdef _MSC_VER
+static unsigned __stdcall reader (void *arg) {
+#else
 static void *reader (void *arg) {
+#endif
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     struct ftdi_context *handle = (struct ftdi_context *)(arg);
     unsigned char buf[0x1000];
@@ -187,7 +190,11 @@ static void *reader (void *arg) {
         for (i=0; i<br; i++)
             add_to_buf (buf[i]);
     }
+#ifdef _MSC_VER
+    return 0;
+#else
     return NULL;
+#endif
 }
 
 static int ft245r_send(PROGRAMMER * pgm, unsigned char * buf, size_t len) {

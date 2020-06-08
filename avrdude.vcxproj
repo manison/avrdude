@@ -44,6 +44,8 @@
     <ClCompile Include="jtagmkII.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="libunistd\unistd\gettimeofday.c" />
+    <ClCompile Include="libunistd\unistd\pthread.c" />
+    <ClCompile Include="libunistd\unistd\semaphore.cpp" />
     <ClCompile Include="linuxgpio.c" />
     <ClCompile Include="lists.c" />
     <ClCompile Include="main.c" />
@@ -99,6 +101,8 @@
     <ClInclude Include="jtagmkII_private.h" />
     <ClInclude Include="jtagmkI_private.h" />
     <ClInclude Include="libavrdude.h" />
+    <ClInclude Include="libunistd\unistd\pthread.h" />
+    <ClInclude Include="libunistd\unistd\semaphore.h" />
     <ClInclude Include="linuxgpio.h" />
     <ClInclude Include="linux_ppdev.h" />
     <ClInclude Include="my_ddk_hidsdi.h" />

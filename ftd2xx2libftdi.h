@@ -37,16 +37,18 @@ enum ftdi_chip_type
 /** MPSSE bitbang modes */
 enum ftdi_mpsse_mode
 {
-	BITMODE_RESET = 0x00,    /**< switch off bitbang mode, back to regular serial/FIFO */
-	BITMODE_BITBANG = 0x01,    /**< classical asynchronous bitbang mode, introduced with B-type chips */
-	BITMODE_MPSSE = 0x02,    /**< MPSSE mode, available on 2232x chips */
-	BITMODE_SYNCBB = 0x04,    /**< synchronous bitbang mode, available on 2232x and R-type chips  */
-	BITMODE_MCU = 0x08,    /**< MCU Host Bus Emulation mode, available on 2232x chips */
+	BITMODE_RESET = FT_BITMODE_RESET,    /**< switch off bitbang mode, back to regular serial/FIFO */
+	BITMODE_BITBANG = FT_BITMODE_ASYNC_BITBANG,    /**< classical asynchronous bitbang mode, introduced with B-type chips */
+	BITMODE_MPSSE = FT_BITMODE_MPSSE,    /**< MPSSE mode, available on 2232x chips */
+	BITMODE_SYNCBB = FT_BITMODE_SYNC_BITBANG,    /**< synchronous bitbang mode, available on 2232x and R-type chips  */
+	BITMODE_MCU = FT_BITMODE_MCU_HOST,    /**< MCU Host Bus Emulation mode, available on 2232x chips */
 	/* CPU-style fifo mode gets set via EEPROM */
-	BITMODE_OPTO = 0x10,    /**< Fast Opto-Isolated Serial Interface Mode, available on 2232x chips  */
-	BITMODE_CBUS = 0x20,    /**< Bitbang on CBUS pins of R-type chips, configure in EEPROM before */
-	BITMODE_SYNCFF = 0x40,    /**< Single Channel Synchronous FIFO mode, available on 2232H chips */
+	BITMODE_OPTO = FT_BITMODE_FAST_SERIAL,    /**< Fast Opto-Isolated Serial Interface Mode, available on 2232x chips  */
+	BITMODE_CBUS = FT_BITMODE_CBUS_BITBANG,    /**< Bitbang on CBUS pins of R-type chips, configure in EEPROM before */
+	BITMODE_SYNCFF = FT_BITMODE_SYNC_FIFO,    /**< Single Channel Synchronous FIFO mode, available on 2232H chips */
+#if 0
 	BITMODE_FT1284 = 0x80,    /**< FT1284 mode, available on 232H chips */
+#endif
 };
 
 /** Port interface for chips with multiple interfaces */
@@ -116,8 +118,8 @@ int ftdi_usb_close(struct ftdi_context *ftdi);
 int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size);
 int ftdi_write_data(struct ftdi_context *ftdi, const unsigned char *buf, int size);
 
+int ftdi_set_baudrate(struct ftdi_context *ftdi, int baudrate);
 int ftdi_set_bitmode(struct ftdi_context *ftdi, unsigned char bitmask, unsigned char mode);
-
 int ftdi_set_latency_timer(struct ftdi_context *ftdi, unsigned char latency);
 
 const char *ftdi_get_error_string(struct ftdi_context *ftdi);
