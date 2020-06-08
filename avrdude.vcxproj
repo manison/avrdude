@@ -45,7 +45,7 @@
     <ClCompile Include="lexer.c" />
     <ClCompile Include="libunistd\unistd\gettimeofday.c" />
     <ClCompile Include="libunistd\unistd\pthread.c" />
-    <ClCompile Include="libunistd\unistd\semaphore.cpp" />
+    <ClCompile Include="libunistd\unistd\semaphore.c" />
     <ClCompile Include="linuxgpio.c" />
     <ClCompile Include="lists.c" />
     <ClCompile Include="main.c" />

@@ -19,22 +19,14 @@
 #ifndef semaphore_h
 #define semaphore_h
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct _sem {
-	char _storage[100];
+	void *handle;
 } sem_t;
 
 int sem_init(sem_t *sem, int pshared, unsigned int value);
 
 int sem_wait(sem_t *sem);
 
-int sem_post(sem_t *st);
-
-#ifdef __cplusplus
-}
-#endif
+int sem_post(sem_t *sem);
 
 #endif

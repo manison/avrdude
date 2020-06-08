@@ -22,6 +22,9 @@
 #include <crtdbg.h>
 #include <stdbool.h>
 
+// This is absolutely minimum and naive implementation of pthread API for making the ft245 programmer work.
+// It only allows one pthread to be created.
+
 static int cancelled;
 
 int pthread_create(pthread_t *pthread, const pthread_attr_t *attr, unsigned (__stdcall * start_routine)(void *), void *arg)
