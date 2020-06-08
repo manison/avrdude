@@ -127,13 +127,16 @@ static FT_STATUS FTd_Write(struct ftdi_context *ftdi, LPVOID lpBuffer, DWORD dwB
 	_d(FT_Write(ftdi->handle, lpBuffer, dwBytesToWrite, lpBytesWritten))
 }
 
+static FT_STATUS FTd_SetTimeouts(struct ftdi_context *ftdi, ULONG ReadTimeout, ULONG WriteTimeout)
+{
+	_d(FT_SetTimeouts(ftdi->handle, ReadTimeout, WriteTimeout))
+}
+
 struct ftdi_context *ftdi_new(void)
 {
 	struct ftdi_context * ftdi = (struct ftdi_context *)malloc(sizeof(struct ftdi_context));
-
-	if (ftdi == NULL) {
+	if (ftdi == NULL)
 		return NULL;
-	}
 
 	memset(ftdi, 0, sizeof(*ftdi));
 
@@ -143,7 +146,6 @@ struct ftdi_context *ftdi_new(void)
 int ftdi_init(struct ftdi_context *ftdi)
 {
 	memset(ftdi, 0, sizeof(*ftdi));
-
 	ftdi_set_interface(ftdi, INTERFACE_ANY);
 	return 0;
 }
@@ -185,10 +187,6 @@ void ftdi_free(struct ftdi_context *ftdi)
 static bool matches_criteria(const FT_DEVICE_LIST_INFO_NODE *devinfo, unsigned current, int vendor, int product,
 	const char *description, const char *serial, unsigned int index)
 {
-	// These are not used in avrftdi.c, don't bother.
-	_ASSERTE(description == NULL);
-	_ASSERTE(index == 0);
-
 	if (description != NULL && strcmp(devinfo->Description, description) != 0)
 		return false;
 
@@ -252,6 +250,11 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
 		return -3;
 	}
 
+	// libftdi ftdi_read_data does not block and returns whatever it currently
+	// has. Set the read timeout so the FT_Read returns (almost) immediately.
+	status = FTd_SetTimeouts(ftdi, 1, 1000);
+	_ASSERTE(FT_SUCCESS(status));
+
 	ftdi->usb_dev = ftdi->handle;
 	ftdi->type = type;
 	return 0;
@@ -265,7 +268,14 @@ int ftdi_usb_purge_buffers(struct ftdi_context *ftdi)
 
 int ftdi_usb_close(struct ftdi_context *ftdi)
 {
-	_ASSERTE(0);
+	_ASSERTE(ftdi->handle != NULL);
+
+	FT_STATUS status = FTd_Close(ftdi);
+	if (!FT_SUCCESS(status))
+		return -1;
+
+	ftdi->handle = ftdi->usb_dev = NULL;
+
 	return 0;
 }
 
