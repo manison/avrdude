@@ -142,7 +142,11 @@ typedef dispatch_semaphore_t	sem_t;
 #define REQ_OUTSTANDINGS	10
 //#define USE_INLINE_WRITE_PAGE
 
+#ifdef _DEBUG
+#define FT245R_DEBUG	1
+#else
 #define FT245R_DEBUG	0
+#endif
 
 static struct ftdi_context *handle;
 
