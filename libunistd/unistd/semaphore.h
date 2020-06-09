@@ -19,8 +19,13 @@
 #ifndef semaphore_h
 #define semaphore_h
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
 typedef struct _sem {
-	void *handle;
+	CONDITION_VARIABLE cv;
+	CRITICAL_SECTION mutex;
+	ULONG count;
 } sem_t;
 
 int sem_init(sem_t *sem, int pshared, unsigned int value);

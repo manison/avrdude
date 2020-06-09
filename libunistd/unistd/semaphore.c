@@ -30,10 +30,9 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
 	_ASSERTE(sem != NULL);
 	_ASSERTE(pshared == 0);
 
-	sem->handle = CreateSemaphoreW(NULL, value, INT_MAX, NULL);
-	_ASSERTE(sem->handle != NULL);
-	if (sem->handle == NULL)
-		return -1;
+	InitializeConditionVariable(&sem->cv);
+	InitializeCriticalSectionEx(&sem->mutex, 4000, 0);
+	sem->count = value;
 
 	return 0;
 }
@@ -42,10 +41,10 @@ int sem_post(sem_t *sem)
 {
 	_ASSERTE(sem != NULL);
 
-	if (!ReleaseSemaphore(sem->handle, 1, NULL)) {
-		_ASSERTE(0);
-		return -1;
-	}
+	EnterCriticalSection(&sem->mutex);
+	++sem->count;
+	WakeConditionVariable(&sem->cv);
+	LeaveCriticalSection(&sem->mutex);
 
 	return 0;
 }
@@ -54,10 +53,12 @@ int sem_wait(sem_t *sem)
 {
 	_ASSERTE(sem != NULL);
 
-	if (WaitForSingleObject(sem->handle, INFINITE) != WAIT_OBJECT_0) {
-		_ASSERTE(0);
-		return -1;
+	EnterCriticalSection(&sem->mutex);
+	while (sem->count == 0) {
+		SleepConditionVariableCS(&sem->cv, &sem->mutex, INFINITE);
 	}
+	--sem->count;
+	LeaveCriticalSection(&sem->mutex);
 
 	return 0;
 }
