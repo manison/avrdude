@@ -182,7 +182,11 @@ static int hexdump_line(char * buffer, unsigned char * p, int n, int pad)
 static int chardump_line(char * buffer, unsigned char * p, int n, int pad)
 {
   int i;
+#ifdef _MSC_VER
+  unsigned char b[128];
+#else
   char b [ 128 ];
+#endif
 
   for (i=0; i<n; i++) {
     memcpy(b, p, n);
