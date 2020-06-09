@@ -132,6 +132,16 @@ static FT_STATUS FTd_SetTimeouts(struct ftdi_context *ftdi, ULONG ReadTimeout, U
 	_d(FT_SetTimeouts(ftdi->handle, ReadTimeout, WriteTimeout))
 }
 
+static FT_STATUS FTd_SetLatencyTimer(struct ftdi_context *ftdi, UCHAR ucLatency)
+{
+	_d(FT_SetLatencyTimer(ftdi->handle, ucLatency))
+}
+
+static FT_STATUS FTd_Purge(struct ftdi_context *ftdi, ULONG Mask)
+{
+	_d(FT_Purge(ftdi->handle, Mask))
+}
+
 struct ftdi_context *ftdi_new(void)
 {
 	struct ftdi_context * ftdi = (struct ftdi_context *)malloc(sizeof(struct ftdi_context));
@@ -262,7 +272,9 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
 
 int ftdi_usb_purge_buffers(struct ftdi_context *ftdi)
 {
-	_ASSERTE(0);
+	FT_STATUS status = FTd_Purge(ftdi,  FT_PURGE_RX | FT_PURGE_TX);
+	if (!FT_SUCCESS(status))
+		return -1;
 	return 0;
 }
 
@@ -315,7 +327,9 @@ int ftdi_set_baudrate(struct ftdi_context *ftdi, int baudrate)
 
 int ftdi_set_latency_timer(struct ftdi_context *ftdi, unsigned char latency)
 {
-	_ASSERTE(0);
+	FT_STATUS status = FTd_SetLatencyTimer(ftdi, latency);
+	if (!FT_SUCCESS(status))
+		return -1;
 	return 0;
 }
 
