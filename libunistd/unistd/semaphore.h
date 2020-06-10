@@ -23,9 +23,7 @@
 #include <Windows.h>
 
 typedef struct _sem {
-	CONDITION_VARIABLE cv;
-	CRITICAL_SECTION mutex;
-	ULONG count;
+	LONG count;
 } sem_t;
 
 int sem_init(sem_t *sem, int pshared, unsigned int value);

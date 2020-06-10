@@ -30,8 +30,6 @@ int sem_init(sem_t *sem, int pshared, unsigned int value)
 	_ASSERTE(sem != NULL);
 	_ASSERTE(pshared == 0);
 
-	InitializeConditionVariable(&sem->cv);
-	InitializeCriticalSectionEx(&sem->mutex, 4000, 0);
 	sem->count = value;
 
 	return 0;
@@ -41,10 +39,8 @@ int sem_post(sem_t *sem)
 {
 	_ASSERTE(sem != NULL);
 
-	EnterCriticalSection(&sem->mutex);
-	++sem->count;
-	WakeConditionVariable(&sem->cv);
-	LeaveCriticalSection(&sem->mutex);
+	InterlockedIncrement(&sem->count);
+	WakeByAddressSingle(&sem->count);
 
 	return 0;
 }
@@ -53,12 +49,16 @@ int sem_wait(sem_t *sem)
 {
 	_ASSERTE(sem != NULL);
 
-	EnterCriticalSection(&sem->mutex);
-	while (sem->count == 0) {
-		SleepConditionVariableCS(&sem->cv, &sem->mutex, INFINITE);
+	for (;;) {
+		LONG prev = sem->count;
+		while (prev == 0) {
+			WaitOnAddress(&sem->count, &prev, sizeof(prev), INFINITE);
+			prev = sem->count;
+		}
+		if (InterlockedCompareExchange(&sem->count, prev - 1, prev) == prev) {
+			break;
+		}
 	}
-	--sem->count;
-	LeaveCriticalSection(&sem->mutex);
 
 	return 0;
 }

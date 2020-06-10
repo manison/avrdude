@@ -208,7 +208,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>ftdi/i386</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>ftd2xx.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
@@ -246,7 +246,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>ftdi/amd64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ftd2xx.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>ftd2xx64.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
