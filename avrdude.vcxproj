@@ -38,7 +38,7 @@
     <ClCompile Include="flip2.c" />
     <ClCompile Include="ft245r.c" />
     <ClCompile Include="ftd2xx2libftdi.c" />
-    <ClCompile Include="getopt\getopt.c" />
+    <ClCompile Include="libunistd\unistd\getopt.c" />
     <ClCompile Include="jtag3.c" />
     <ClCompile Include="jtagmkI.c" />
     <ClCompile Include="jtagmkII.c" />
@@ -46,6 +46,7 @@
     <ClCompile Include="libunistd\unistd\gettimeofday.c" />
     <ClCompile Include="libunistd\unistd\pthread.c" />
     <ClCompile Include="libunistd\unistd\semaphore.c" />
+    <ClCompile Include="libunistd\unistd\usleep.c" />
     <ClCompile Include="linuxgpio.c" />
     <ClCompile Include="lists.c" />
     <ClCompile Include="main.c" />
@@ -103,6 +104,8 @@
     <ClInclude Include="libavrdude.h" />
     <ClInclude Include="libunistd\unistd\pthread.h" />
     <ClInclude Include="libunistd\unistd\semaphore.h" />
+    <ClInclude Include="libunistd\unistd\sys\time.h" />
+    <ClInclude Include="libunistd\unistd\unistd.h" />
     <ClInclude Include="linuxgpio.h" />
     <ClInclude Include="linux_ppdev.h" />
     <ClInclude Include="my_ddk_hidsdi.h" />
@@ -199,17 +202,17 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;WIN32NATIVE;CONFIG_DIR=".";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;__STDC_VERSION__=199901;HAVE_LIBWS2_32;WIN32NATIVE;CONFIG_DIR=".";%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>libunistd/unistd</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4018;4244;4090</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4018;4244;4090;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>ftdi/i386</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>ftd2xx.dll</DelayLoadDLLs>
+      <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>ftd2xx.dll;ws2_32.dll</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

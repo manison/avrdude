@@ -16,14 +16,32 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef sys_time_h
-#define sys_time_h
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
-struct timeval {
-	time_t	tv_sec;
-	int	tv_usec;
-};
+static LARGE_INTEGER freq;
 
-int gettimeofday(struct timeval *tv, struct timezone *tz);
+int usleep(unsigned usec)
+{
+	if (usec > 10000) {
+		Sleep(usec / 1000);
+		return 0;
+	}
 
-#endif
+	// Adapted from bitbang.c
+
+	if (freq.QuadPart == 0) {
+		QueryPerformanceFrequency(&freq);
+	}
+
+	LARGE_INTEGER now, end;
+	QueryPerformanceCounter(&now);
+	end.QuadPart = now.QuadPart + freq.QuadPart * usec / 1000000LL;
+
+	while (now.QuadPart < end.QuadPart) {
+		YieldProcessor();
+		QueryPerformanceCounter(&now);
+	}
+
+	return 0;
+}
