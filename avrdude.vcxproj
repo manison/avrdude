@@ -78,6 +78,9 @@
       <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>ftd2xx.dll;ws2_32.dll</DelayLoadDLLs>
     </Link>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RC_ORIGINAL_FILENAME=$(TargetName)$(TargetExt)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
     <ClCompile>
@@ -93,6 +96,9 @@
     <ClCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -105,6 +111,11 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Author)'!=''">
+    <ResourceCompile>
+      <PreprocessorDefinitions>RC_BUILT_BY=$(Author);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ItemGroup>
@@ -213,8 +224,86 @@
     <ClInclude Include="usbasp.h" />
     <ClInclude Include="usbdevs.h" />
     <ClInclude Include="usbtiny.h" />
+    <ClInclude Include="winrelease.h" />
     <ClInclude Include="wiring.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="winrelease.rc2">
+      <FileType>RC</FileType>
+    </ResourceCompile>
+  </ItemGroup>
+  <UsingTask
+    TaskName="ExtractVersionFromACHeader"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Path ParameterType="System.String" Required="true" />
+      <VersionMajor ParameterType="System.String" Output="true" />
+      <VersionMinor ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        string content = File.ReadAllText(Path);
+        var match = Regex.Match(content, @"#define VERSION ""(\d+)\.(\d+)");
+        VersionMajor = match.Groups[1].Value;
+        VersionMinor = match.Groups[2].Value;
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="ExtractGitCommitID"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <GitDescription ParameterType="System.String" Required="true" />
+      <GitCommitID ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System.Text.RegularExpressions" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        GitCommitID = GitDescription;
+        var match = Regex.Match(GitDescription, "(.*)-.*-g(.*)");
+        if (match.Success && match.Groups.Count == 3)
+        {
+          GitCommitID = match.Groups[2].Value;
+        }
+      ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="ExtractGitCommitId" BeforeTargets="ClCompile">
+    <Exec
+      Command="git describe --all --always --long --dirty"
+      EchoOff="true"
+      ConsoleToMSBuild="true"
+      IgnoreStandardErrorWarningFormat="true"
+      StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" ItemName="_GitDescribeOutput" />
+    </Exec>
+    <ExtractGitCommitID GitDescription="@(_GitDescribeOutput)">
+      <Output TaskParameter="GitCommitID" PropertyName="GitCommitID" />
+    </ExtractGitCommitID>
+    <Message Text="Git commit ID: $(GitCommitID)" Importance="High" />
+    <ItemGroup>
+      <ClCompile>
+        <PreprocessorDefinitions>GIT_COMMIT=$(GitCommitID);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      </ClCompile>
+      <ResourceCompile>
+        <PreprocessorDefinitions>GIT_COMMIT=$(GitCommitID);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      </ResourceCompile>
+    </ItemGroup>
+  </Target>
+  <Target Name="ExtractVersion" BeforeTargets="ResourceCompile" DependsOnTargets="ExtractGitCommitId">
+    <ExtractVersionFromACHeader Path="$(MSBuildThisFileDirectory)ac_cfg.h">
+      <Output TaskParameter="VersionMajor" PropertyName="VersionMajor" />
+      <Output TaskParameter="VersionMinor" PropertyName="VersionMinor" />
+    </ExtractVersionFromACHeader>
+    <ItemGroup>
+      <ResourceCompile>
+        <PreprocessorDefinitions>VER_MAJOR=$(VersionMajor);VER_MINOR=$(VersionMinor);%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      </ResourceCompile>
+    </ItemGroup>
+  </Target>
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

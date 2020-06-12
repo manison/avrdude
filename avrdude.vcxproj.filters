@@ -125,6 +125,7 @@
     <ClInclude Include="libunistd\unistd\sys\time.h">
       <Filter>unistd\sys</Filter>
     </ClInclude>
+    <ClInclude Include="winrelease.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="unistd">
@@ -136,5 +137,8 @@
     <Filter Include="unistd\sys">
       <UniqueIdentifier>{817717ee-731a-4c05-85e0-ab135de1882b}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="winrelease.rc2" />
   </ItemGroup>
 </Project>

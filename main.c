@@ -52,12 +52,18 @@
 
 
 #ifdef _MSC_VER
+#   include "winrelease.h"
 #   define setvbuf  __noop
 #endif
 
 
+#ifndef _MSC_VER
 /* Get VERSION from ac_cfg.h */
 char * version      = VERSION;
+#else
+char * version      = WIN_VERSION;
+#endif
+
 
 char * progname;
 char   progbuf[PATH_MAX]; /* temporary buffer of spaces the same
@@ -138,7 +144,7 @@ static void usage(void)
  "  -q                         Quell progress output. -q -q for less.\n"
  "  -l logfile                 Use logfile rather than stderr for diagnostics.\n"
  "  -?                         Display this usage.\n"
- "\navrdude version %s, URL: <http://savannah.nongnu.org/projects/avrdude/>\n"
+ "\navrdude version %s\nURL: <http://savannah.nongnu.org/projects/avrdude/>, <https://github.com/manison/avrdude>\n"
           ,progname, version);
 }
 
