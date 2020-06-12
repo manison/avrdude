@@ -82,14 +82,18 @@
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
 #elif defined(_MSC_VER)
-#pragma message("No libftdi or libusb support.Install libftdi1 / libusb - 1.0 or libftdi / libusb and run configure / make again.")
-#define DO_NOT_BUILD_FT245R
+# include "ftd2xx2libftdi.h"
+# define USE_RECV_THREAD    0
 #else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_FT245R
 #endif
 
-#ifndef HAVE_PTHREAD_H
+#ifndef USE_RECV_THREAD
+# define USE_RECV_THREAD    1
+#endif
+
+#if !defined(HAVE_PTHREAD_H) && USE_RECV_THREAD
 
 static int ft245r_nopthread_open (struct programmer_t *pgm, char * name) {
     avrdude_message(MSG_INFO, "%s: error: no pthread support. Please compile again with pthread installed."
@@ -123,6 +127,8 @@ void ft245r_initpgm(PROGRAMMER * pgm) {
 
 #else
 
+#if USE_RECV_THREAD
+
 #include <pthread.h>
 
 #ifdef __APPLE__
@@ -138,18 +144,26 @@ typedef dispatch_semaphore_t	sem_t;
 #include <semaphore.h>
 #endif
 
+#endif /* USE_RECV_THREAD */
+
 #define FT245R_CYCLES	2
 #define FT245R_FRAGMENT_SIZE  512
 #define REQ_OUTSTANDINGS	10
 //#define USE_INLINE_WRITE_PAGE
 
+#ifdef _DEBUG
+#define FT245R_DEBUG	1
+#else
 #define FT245R_DEBUG	0
+#endif
 
 static struct ftdi_context *handle;
 
 static unsigned char ft245r_ddr;
 static unsigned char ft245r_out;
 static unsigned char ft245r_in;
+
+#if USE_RECV_THREAD
 
 #define BUFSIZE 0x2000
 
@@ -175,7 +189,11 @@ static void add_to_buf (unsigned char c) {
     sem_post (&buf_data);
 }
 
+#ifdef _MSC_VER
+static unsigned __stdcall reader (void *arg) {
+#else
 static void *reader (void *arg) {
+#endif
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS,NULL);
     struct ftdi_context *handle = (struct ftdi_context *)(arg);
     unsigned char buf[0x1000];
@@ -187,8 +205,14 @@ static void *reader (void *arg) {
         for (i=0; i<br; i++)
             add_to_buf (buf[i]);
     }
+#ifdef _MSC_VER
+    return 0;
+#else
     return NULL;
+#endif
 }
+
+#endif
 
 static int ft245r_send(PROGRAMMER * pgm, unsigned char * buf, size_t len) {
     int rv;
@@ -197,6 +221,8 @@ static int ft245r_send(PROGRAMMER * pgm, unsigned char * buf, size_t len) {
     if (len != rv) return -1;
     return 0;
 }
+
+#if USE_RECV_THREAD
 
 static int ft245r_recv(PROGRAMMER * pgm, unsigned char * buf, size_t len) {
     int i;
@@ -215,10 +241,30 @@ static int ft245r_recv(PROGRAMMER * pgm, unsigned char * buf, size_t len) {
     return 0;
 }
 
+#else
+
+static int ft245r_recv(PROGRAMMER * pgm, unsigned char * buf, size_t len) {
+    int toread = len;
+    unsigned char *p = buf;
+
+    while (toread > 0) {
+        for (int i = 0; toread > 0 && i < 10; i++) {
+            int rv = ftdi_read_data(handle, p, toread);
+            if (rv < 0)
+                return rv;
+            toread -= rv;
+            p += rv;
+        }
+    }
+
+    return 0;
+}
+
+#endif
 
 static int ft245r_drain(PROGRAMMER * pgm, int display) {
     int r;
-    unsigned char t;
+    unsigned char t = 0;
 
     // flush the buffer in the chip by changing the mode.....
     r = ftdi_set_bitmode(handle, 0, BITMODE_RESET); 	// reset
@@ -226,10 +272,15 @@ static int ft245r_drain(PROGRAMMER * pgm, int display) {
     r = ftdi_set_bitmode(handle, ft245r_ddr, BITMODE_SYNCBB); // set Synchronuse BitBang
     if (r) return -1;
 
+#if USE_RECV_THREAD
     // drain our buffer.
     while (head != tail) {
         ft245r_recv (pgm, &t, 1);
     }
+#else
+    r = ftdi_usb_purge_buffers(handle);
+    if (r) return -1;
+#endif
     return 0;
 }
 
@@ -405,7 +456,9 @@ static int ft245r_program_enable(PROGRAMMER * pgm, AVRPART * p) {
 
         if (i == 3) {
             ft245r_drain(pgm, 0);
+#if USE_RECV_THREAD
             tail = head;
+#endif
         }
     }
 
@@ -654,6 +707,7 @@ static int ft245r_open(PROGRAMMER * pgm, char * port) {
         goto cleanup;
     }
 
+#if USE_RECV_THREAD
     /* We start a new thread to read the output from the FTDI. This is
      * necessary because otherwise we'll deadlock. We cannot finish
      * writing because the ftdi cannot send the results because we
@@ -662,6 +716,7 @@ static int ft245r_open(PROGRAMMER * pgm, char * port) {
     sem_init (&buf_data, 0, 0);
     sem_init (&buf_space, 0, BUFSIZE);
     pthread_create (&readerthread, NULL, reader, handle);
+#endif
 
     /*
      * drain any extraneous input
@@ -690,6 +745,7 @@ static void ft245r_close(PROGRAMMER * pgm) {
         ftdi_set_bitmode(handle, 0, BITMODE_SYNCBB); // set Synchronous BitBang, all in puts
         ftdi_set_bitmode(handle, 0, BITMODE_RESET); // disable Synchronous BitBang
         ftdi_usb_close(handle);
+#if USE_RECV_THREAD
         while(pthread_cancel(readerthread) && retry_times < 100) {
             retry_times++;
             usleep(100);
@@ -699,6 +755,7 @@ static void ft245r_close(PROGRAMMER * pgm) {
         }
 
         pthread_join(readerthread, NULL);
+#endif
         ftdi_deinit (handle);
         free(handle);
         handle = NULL;

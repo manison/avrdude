@@ -16,8 +16,10 @@
 /* ftdi.h includes usb.h */
 #include <ftdi.h>
 #elif defined(_MSC_VER)
-#pragma message("No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.")
-#define DO_NOT_BUILD_AVRFTDI
+# include "ftd2xx2libftdi.h"
+# include <intrin.h>
+# define __builtin_popcount(n)	__popcnt(n)
+# define HAVE_LIBFTDI_TYPE_232H
 #else
 #warning No libftdi or libusb support. Install libftdi1/libusb-1.0 or libftdi/libusb and run configure/make again.
 #define DO_NOT_BUILD_AVRFTDI

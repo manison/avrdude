@@ -49,10 +49,18 @@
     <ClCompile Include="usb_hidapi.c" />
     <ClCompile Include="usb_libusb.c" />
     <ClCompile Include="wiring.c" />
-    <ClCompile Include="getopt\getopt.c">
+    <ClCompile Include="libunistd\unistd\gettimeofday.c">
       <Filter>unistd</Filter>
     </ClCompile>
-    <ClCompile Include="libunistd\unistd\gettimeofday.c">
+    <ClCompile Include="ftd2xx2libftdi.c" />
+    <ClCompile Include="libunistd\unistd\pthread.c">
+      <Filter>unistd</Filter>
+    </ClCompile>
+    <ClCompile Include="libunistd\unistd\semaphore.c">
+      <Filter>unistd</Filter>
+    </ClCompile>
+    <ClCompile Include="libunistd\unistd\getopt.c" />
+    <ClCompile Include="libunistd\unistd\usleep.c">
       <Filter>unistd</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,10 +109,32 @@
     <ClInclude Include="usbdevs.h" />
     <ClInclude Include="usbtiny.h" />
     <ClInclude Include="wiring.h" />
+    <ClInclude Include="ftdi\ftd2xx.h">
+      <Filter>ftdi</Filter>
+    </ClInclude>
+    <ClInclude Include="ftd2xx2libftdi.h" />
+    <ClInclude Include="libunistd\unistd\semaphore.h">
+      <Filter>unistd</Filter>
+    </ClInclude>
+    <ClInclude Include="libunistd\unistd\pthread.h">
+      <Filter>unistd</Filter>
+    </ClInclude>
+    <ClInclude Include="libunistd\unistd\unistd.h">
+      <Filter>unistd</Filter>
+    </ClInclude>
+    <ClInclude Include="libunistd\unistd\sys\time.h">
+      <Filter>unistd\sys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="unistd">
       <UniqueIdentifier>{96a4e45f-af80-45e3-bb19-b112158e7a36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ftdi">
+      <UniqueIdentifier>{40eac884-ff69-444a-8c3a-1581b46b18b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="unistd\sys">
+      <UniqueIdentifier>{817717ee-731a-4c05-85e0-ab135de1882b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
