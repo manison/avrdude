@@ -36,7 +36,7 @@
 #define _STR(x)             #x
 #define STR(x)              _STR(x)
 
-#define WIN_RELEASE         1
+#define WIN_RELEASE         2
 #define WIN_RELEASE_SUFFIX  "-win" STR(WIN_RELEASE)
 
 #ifndef GIT_COMMIT
