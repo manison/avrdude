@@ -7,6 +7,13 @@ technique (ISP).
 This port can be built natively under Windows with Visual C++ compiler (no more
 [crosscompiling](https://github.com/arduino/avrdude-build-script#windows-cross-compile-from-linux-requirements) with MinGW or Cygwin).
 
+This port has no external dependencies. The FTDI CDM drivers are required when using
+FTDI based programmers (_avrftdi_ or _ftdi_syncbb_). No dependencies on _libusb_ or _libftdi_.
+
+## System Requirements
+
+* Windows XP or newer
+
 ## Build Prerequisities
 
 * [Visual Studio 2019 Community](https://visualstudio.microsoft.com/) or higher with C++ desktop development workload
