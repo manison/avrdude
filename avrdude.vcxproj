@@ -77,6 +77,7 @@
       <AdditionalLibraryDirectories>ftdi/$(FtdPlatform)</AdditionalLibraryDirectories>
       <AdditionalDependencies>ftd2xx.lib;Synchronization.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>ftd2xx.dll;ws2_32.dll</DelayLoadDLLs>
+      <AdditionalOptions>/PDBALTPATH:%_PDB% %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ResourceCompile>
       <PreprocessorDefinitions>RC_ORIGINAL_FILENAME=$(TargetName)$(TargetExt)</PreprocessorDefinitions>
