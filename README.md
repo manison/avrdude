@@ -10,6 +10,10 @@ This port can be built natively under Windows with Visual C++ compiler (no more
 This port has no external dependencies. The FTDI CDM drivers are required when using
 FTDI based programmers (_avrftdi_ or _ftdi_syncbb_). No dependencies on _libusb_ or _libftdi_.
 
+## Download
+
+Latest release can be downloaded from the [release page](https://github.com/manison/avrdude/releases/).
+
 ## System Requirements
 
 * Windows XP or newer
